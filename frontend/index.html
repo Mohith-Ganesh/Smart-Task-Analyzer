@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Task Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Smart Task Analyzer</h1>
+            <p class="subtitle">Intelligent task prioritization powered by multi-factor scoring</p>
+            
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Tab Navigation -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="manage"> Manage Tasks</button>
+                <button class="tab-btn" data-tab="analyze"> Analyze</button>
+                <button class="tab-btn" data-tab="suggest"> Suggestions</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Manage Tasks Tab -->
+                <div class="tab-pane active" id="manage">
+                    <div class="section">
+                        <h2>Create New Task</h2>
+                        <form id="taskForm" class="task-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="taskTitle">Task Title *</label>
+                                    <input type="text" id="taskTitle" placeholder="e.g., Fix login bug" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dueDate">Due Date *</label>
+                                    <input type="date" id="dueDate" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="estimatedHours">Estimated Hours *</label>
+                                    <input type="number" id="estimatedHours" min="0.1" step="0.5" placeholder="e.g., 3" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="importance">Importance (1-10) *</label>
+                                    <input type="number" id="importance" min="1" max="10" placeholder="e.g., 8" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dependencies">Dependencies (comma-separated IDs)</label>
+                                <input type="text" id="dependencies" placeholder="e.g., 1, 2, 3">
+                                <small>Enter task IDs that this task depends on</small>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                 Add Task
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="section">
+                        <h2>Bulk Import</h2>
+                        <div class="bulk-import">
+                            <label for="bulkJson">Paste JSON Array of Tasks</label>
+                            <textarea id="bulkJson" rows="8" placeholder='[
+  {
+    "title": "Task 1",
+    "due_date": "2025-12-01",
+    "estimated_hours": 3,
+    "importance": 8,
+    "dependencies": []
+  }
+]'></textarea>
+                            <button class="btn btn-secondary" id="bulkImportBtn">
+                                 Import Tasks
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>All Tasks (<span id="taskCount">0</span>)</h2>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-secondary" id="refreshTasksBtn">
+                                     Refresh
+                                </button>
+                                <button class="btn btn-sm btn-danger" id="deleteAllBtn">
+                                    Delete All
+                                </button>
+                            </div>
+                        </div>
+                        <div id="tasksList" class="tasks-list">
+                            <div class="empty-state">No tasks yet. Create one above!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analyze Tab -->
+                <div class="tab-pane" id="analyze">
+                    <div class="section">
+                        <h2>Task Analysis</h2>
+                        <p class="section-description">Analyze all tasks with different prioritization strategies</p>
+                        
+                        <div class="strategy-selector">
+                            <label>Select Strategy:</label>
+                            <div class="strategy-buttons">
+                                <button class="strategy-btn active" data-strategy="smart_balance">
+                                    <span class="strategy-name">Smart Balance</span>
+                                    <span class="strategy-desc">Balanced approach</span>
+                                </button>
+                                <button class="strategy-btn" data-strategy="fastest_wins">
+                                    <span class="strategy-name">Fastest Wins</span>
+                                    <span class="strategy-desc">Quick tasks first</span>
+                                </button>
+                                <button class="strategy-btn" data-strategy="high_impact">
+                                    <span class="strategy-name">High Impact</span>
+                                    <span class="strategy-desc">Importance focused</span>
+                                </button>
+                                <button class="strategy-btn" data-strategy="deadline_driven">
+                                    <span class="strategy-name">Deadline Driven</span>
+                                    <span class="strategy-desc">Urgency first</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-large" id="analyzeBtn">
+                                     Analyze Tasks
+                        </button>
+
+                        <div id="analysisResults" class="results-container"></div>
+                    </div>
+                </div>
+
+                <!-- Suggestions Tab -->
+                <div class="tab-pane" id="suggest">
+                    <div class="section">
+                        <h2>Task Suggestions</h2>
+                        <p class="section-description">Get top priority tasks you should work on today</p>
+                        
+                        <div class="suggestion-controls">
+                            <div class="form-group">
+                                <label for="suggestionCount">Number of Suggestions:</label>
+                                <input type="number" id="suggestionCount" min="1" max="10" value="3">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Strategy:</label>
+                                <select id="suggestionStrategy" class="strategy-select">
+                                    <option value="smart_balance">Smart Balance</option>
+                                    <option value="fastest_wins"> Fastest Wins</option>
+                                    <option value="high_impact"> High Impact</option>
+                                    <option value="deadline_driven"> Deadline Driven</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-large" id="suggestBtn">
+                             Get Suggestions
+                        </button>
+
+                        <div id="suggestionResults" class="results-container"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
