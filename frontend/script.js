@@ -1,5 +1,5 @@
 // Configuration
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = 'https://accomplished-grace-production.up.railway.app/api';
 
 // Constants
 const STRATEGY_NAMES = {

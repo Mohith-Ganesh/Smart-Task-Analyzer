@@ -13,7 +13,7 @@ A Django-based intelligent task management system that scores and prioritizes ta
 
 1. **Clone or extract the repository**
 ```bash
-cd task-analyzer
+cd task-analyzer/all_backend
 ```
 
 2. **Create and activate virtual environment**
